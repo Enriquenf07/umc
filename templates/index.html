@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+    <form id="form">
+        <input type="text" id="x" name="X" placeholder="X">
+        <input type="text" id="y" name="y" placeholder="Y">
+        <button type="submit">Enter position</button>
+    </form>
+
+
+    <div id="positions">
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script>
+        const enter = (x, y) => {
+            fetch('/enter', {method: 'POST',  headers: {
+            'Content-Type': 'application/json'
+        }, body: JSON.stringify({
+                        x: x,
+                        y: y
+                    })})
+        }
+        const divPositions = document.getElementById('positions')
+
+        const fetchData = async () => {
+            const response = await fetch("/sensor")
+            const data = await response.json();
+            divPositions.innerHTML = ''
+            data.forEach(item => {
+                const newP = document.createElement('p');
+                newP.textContent = `X: ${item.pos && item.pos.x}; Y ${item.pos && item.pos.x}; hora: ${dayjs(item.time).format('DD/MM/YYYY HH:mm')}`
+
+                divPositions.appendChild(newP);
+
+            })
+        }
+
+        document.getElementById("form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const x = document.getElementById("x").value;
+            const y = document.getElementById("y").value;
+            enter(x, y)
+        });
+
+        setInterval(fetchData, 3000)
+    </script>
+</body>
+</html>

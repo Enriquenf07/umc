@@ -1,4 +1,4 @@
-from flask import  Flask, request
+from flask import Flask, request, render_template
 from datetime import datetime
 app = Flask(__name__)
 last_events = [
@@ -31,10 +31,14 @@ class Event:
 def get():
     return last_events
 
+@app.route('/')
+def getHtml():
+    return render_template('index.html')
+
 @app.route('/enter', methods=['POST'])
 def enter():
     data = request.get_json()
-    last_events.append(Event(Posicao(data['x'], data['y'])))
+    last_events.append(Event(Posicao(data['x'], data['y'])).to_dict())
     return "ok"
 
 if __name__ == '__main__':
