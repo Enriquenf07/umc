@@ -34,7 +34,7 @@ def get():
 @app.route('/enter', methods=['POST'])
 def enter():
     data = request.get_json()
-    last_events.append(Event(Posicao(data['x'], data['y'])).to_dict())
+    last_events.append(Event(Posicao(data['x'], data['y'])))
     return "ok"
 
 if __name__ == '__main__':
